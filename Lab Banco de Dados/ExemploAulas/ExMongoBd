@@ -1,0 +1,76 @@
+cls
+
+show dbs
+
+Criar Database ou ativar a DB
+use teste10
+
+Mostrar a DB ativa
+db
+
+Apaga a DB ativa
+db.dropDatabase()
+
+use test
+use teste10
+db
+
+Criar Collection
+db.createCollection("cliente")
+
+Mostrar Collections
+show collections
+
+Excluir Collection
+db.cliente.drop()
+
+show collections
+db.createCollection("cliente")
+
+
+Insert:
+db.cliente.insert({"_id":"1", "nome":"Beltrano de Tal", "data_nasc":"1984-04-14"})
+db.cliente.insert({"_id":"2", "nome":"Fulano de Tal", "data_nasc":new Date("1982-10-15")})
+db.cliente.insert({"_id":"3", "nome":"Cicrano de Tal", "email":["cicrano@gmail.com", "cicrano@hotmail.com"]})
+db.cliente.insert({"_id":"4", "nome":"Leandro Santos", "endereco":{"logradouro":"Rua dos Bobos", "numero":"0", "cep":"00001000"},"email":"leandro@email.com"})
+
+db.cliente.insertMany([{"_id":"5", "nome":"Jeremy Spoke", "telefones":["922222222","933333333"]},{"_id":"6", "nome":"Alice in Chains", "telefone":"911111111", "email":"alice@chains.com"}])
+
+Update:
+db.cliente.update({"nome":"Beltrano de Tal"}, {$set:{"data_nasc":"1984-05-14"}})
+db.cliente.updateMany({}, {$set:{"credito":"2000.00"}})
+db.cliente.update({"nome":"Leandro Santos"}, {$set:{"nome" : "Leandro dos Santos", "endereco" : { "logradouro" : "Rua dos Bobos", "numero" : "10", "cep" : "00001000" }}})
+
+Operadores: $eq, $lt, $lte, $gt, $gte, $ne
+db.cliente.updateMany({"_id":{$lte:"3"}}, {$set:{"credito":"3000.00"}})
+
+Unset:
+db.cliente.updateMany({"_id":{$gt:"5"}},{$unset:{"credito":""}})
+
+And/Or:
+db.cliente.updateMany({$and:[{"credito":"3000.00"},{"email":{$exists:true}}]},{$set:{"credito":"4500.00"}})
+
+
+db.cliente.updateMany({"credito":{$exists:false}},{$set:{"credito":"4000.00"}})
+
+Delete:
+db.cliente.remove({"nome":"Cicrano de Tal"})
+db.cliente.remove({})
+
+Find:
+db.cliente.find({})
+db.cliente.find({"_id":{$ne:"4"}})
+db.cliente.find({"credito":{$gte:"2500"}})
+
+db.cliente.find({"credito":{$exists:false}})
+db.cliente.find({"credito":{$exists:true}})
+
+db.cliente.find({$or:[{"credito":"3000.00"},{"credito":{$exists:false}}]})
+db.cliente.find({$and:[{"credito":"3000.00"},{"email":{$exists:true}}]})
+db.cliente.find({"credito":{$not:{$lte:"3000.00"}}})
+
+db.cliente.find({"credito":{$not:{$lte:"3000.00"}}}).sort({"nome":1})
+db.cliente.find({"credito":{$not:{$lte:"3000.00"}}}).sort({"nome":-1})
+db.cliente.find({"credito":{$not:{$lte:"3000.00"}}}).limit(2)
+db.cliente.find().count()
+db.cliente.find({"credito":{$not:{$lte:"3000.00"}}}).count()
